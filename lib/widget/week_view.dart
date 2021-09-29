@@ -13,12 +13,12 @@ import 'package:provider/provider.dart';
 class WeekView extends StatefulWidget {
   final int year;
   final int month;
-  final DateModel firstDayOfWeek;
-  final CalendarConfiguration configuration;
+  final DateModel? firstDayOfWeek;
+  final CalendarConfiguration? configuration;
 
   const WeekView(
-      {@required this.year,
-      @required this.month,
+      {required this.year,
+      required this.month,
       this.firstDayOfWeek,
       this.configuration});
 
@@ -27,32 +27,32 @@ class WeekView extends StatefulWidget {
 }
 
 class _WeekViewState extends State<WeekView> {
-  List<DateModel> items;
+  late List<DateModel> items;
 
-  Map<DateModel, Object> extraDataMap; //自定义额外的数据
+  Map<DateModel, Object>? extraDataMap; //自定义额外的数据
 
   @override
   void initState() {
     super.initState();
-    extraDataMap = widget.configuration.extraDataMap;
-    items = DateUtil.initCalendarForWeekView(
-        widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
-        minSelectDate: widget.configuration.minSelectDate,
-        maxSelectDate: widget.configuration.maxSelectDate,
+    extraDataMap = widget.configuration?.extraDataMap;
+    items = DateUtil.initCalendarForWeekView(widget.year, widget.month,
+        widget.firstDayOfWeek?.getDateTime() ?? DateTime.now(), 0,
+        minSelectDate: widget.configuration?.minSelectDate,
+        maxSelectDate: widget.configuration?.maxSelectDate,
         extraDataMap: extraDataMap,
-        offset: widget.configuration.offset);
+        offset: widget.configuration?.offset ?? 0);
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
-    WidgetsBinding.instance.addPostFrameCallback((callback) {
+    WidgetsBinding.instance!.addPostFrameCallback((callback) {
       Provider.of<CalendarProvider>(context, listen: false)
           .generation
           .addListener(() async {
-        items = DateUtil.initCalendarForWeekView(
-            widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
-            minSelectDate: widget.configuration.minSelectDate,
-            maxSelectDate: widget.configuration.maxSelectDate,
+        items = DateUtil.initCalendarForWeekView(widget.year, widget.month,
+            widget.firstDayOfWeek?.getDateTime() ?? DateTime.now(), 0,
+            minSelectDate: widget.configuration?.minSelectDate,
+            maxSelectDate: widget.configuration?.maxSelectDate,
             extraDataMap: extraDataMap,
-            offset: widget.configuration.offset);
+            offset: widget.configuration?.offset ?? 0);
         setState(() {});
       });
     });
@@ -63,7 +63,7 @@ class _WeekViewState extends State<WeekView> {
     CalendarProvider calendarProvider =
         Provider.of<CalendarProvider>(context, listen: false);
 
-    CalendarConfiguration configuration =
+    CalendarConfiguration? configuration =
         calendarProvider.calendarConfiguration;
     return new GridView.builder(
         physics: NeverScrollableScrollPhysics(),
@@ -73,7 +73,7 @@ class _WeekViewState extends State<WeekView> {
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择
-          switch (configuration.selectMode) {
+          switch (configuration?.selectMode) {
             case CalendarSelectedMode.multiSelect:
               if (calendarProvider.selectedDateList.contains(dateModel)) {
                 dateModel.isSelected = true;
@@ -81,15 +81,18 @@ class _WeekViewState extends State<WeekView> {
                 dateModel.isSelected = false;
               }
               break;
-            case CalendarSelectedMode.singleSelect:
-              if (calendarProvider.selectDateModel == dateModel) {
+
+            case CalendarSelectedMode.mutltiStartToEndSelect:
+              if (calendarProvider.selectedDateList.contains(dateModel)) {
                 dateModel.isSelected = true;
               } else {
                 dateModel.isSelected = false;
               }
               break;
-            case CalendarSelectedMode.mutltiStartToEndSelect:
-              if (calendarProvider.selectedDateList.contains(dateModel)) {
+
+            case CalendarSelectedMode.singleSelect:
+            default:
+              if (calendarProvider.selectDateModel == dateModel) {
                 dateModel.isSelected = true;
               } else {
                 dateModel.isSelected = false;

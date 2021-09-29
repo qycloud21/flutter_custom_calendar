@@ -110,9 +110,9 @@ class DateUtil {
 
   static List<DateModel> initCalendarForMonthView(
       int year, int month, DateTime currentDate, int weekStart,
-      {DateModel minSelectDate,
-      DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap,
+      {DateModel? minSelectDate,
+      DateModel? maxSelectDate,
+      Map<DateModel, Object>? extraDataMap,
       int offset = 0}) {
     print('initCalendarForMonthView start');
     weekStart = DateTime.monday;
@@ -125,9 +125,9 @@ class DateUtil {
     LogUtil.log(
         TAG: "DateUtil",
         message:
-            "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
+            "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为$mPreDiff");
 
-    List<DateModel> result = new List();
+    List<DateModel> result = [];
 
     int size = 42;
 
@@ -161,15 +161,19 @@ class DateUtil {
       }
 
       //判断是否在范围内
-      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) &&
-          dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
+      if (dateModel
+              .getDateTime()
+              .isAfter(minSelectDate?.getDateTime() ?? DateTime.now()) &&
+          dateModel
+              .getDateTime()
+              .isBefore(maxSelectDate?.getDateTime() ?? DateTime.now())) {
         dateModel.isInRange = true;
       } else {
         dateModel.isInRange = false;
       }
       //将自定义额外的数据，存储到相应的model中
       if (extraDataMap?.isNotEmpty == true) {
-        if (extraDataMap.containsKey(dateModel)) {
+        if (extraDataMap!.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
         } else {
           dateModel.extraData = null;
@@ -207,11 +211,11 @@ class DateUtil {
    */
   static List<DateModel> initCalendarForWeekView(
       int year, int month, DateTime currentDate, int weekStart,
-      {DateModel minSelectDate,
-      DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap,
+      {DateModel? minSelectDate,
+      DateModel? maxSelectDate,
+      Map<DateModel, Object>? extraDataMap,
       int offset = 0}) {
-    List<DateModel> items = List();
+    List<DateModel> items = [];
 
     int weekDay = currentDate.weekday + offset;
 
@@ -223,8 +227,12 @@ class DateUtil {
           DateModel.fromDateTime(firstDayOfWeek.add(Duration(days: i)));
 
       //判断是否在范围内
-      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) &&
-          dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
+      if (dateModel
+              .getDateTime()
+              .isAfter(minSelectDate?.getDateTime() ?? DateTime.now()) &&
+          dateModel
+              .getDateTime()
+              .isBefore(maxSelectDate?.getDateTime() ?? DateTime.now())) {
         dateModel.isInRange = true;
       } else {
         dateModel.isInRange = false;
@@ -237,7 +245,7 @@ class DateUtil {
 
       //将自定义额外的数据，存储到相应的model中
       if (extraDataMap?.isNotEmpty == true) {
-        if (extraDataMap.containsKey(dateModel)) {
+        if (extraDataMap!.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
         }
       }

@@ -39,9 +39,9 @@ class CustomDayWidgetPainter extends CustomPainter {
 
   DrawDayWidget drawDayWidget; //普通样式是必须的
 
-  CustomDayWidgetPainter(this.dateModel, {this.drawDayWidget});
+  CustomDayWidgetPainter(this.dateModel, {required this.drawDayWidget});
 
-  Paint textPaint;
+  late Paint textPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
