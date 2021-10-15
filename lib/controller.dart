@@ -32,7 +32,7 @@ class CalendarController {
   List<DateModel> monthList = []; //月份list
   List<DateModel> weekList = []; //星期list
   late PageController monthController; //月份的controller
-  late PageController weekController; //星期的controller
+  PageController? weekController; //星期的controller
 
   CalendarController(
       {CalendarSelectedMode selectMode = CalendarSelectedMode.singleSelect,
@@ -170,7 +170,7 @@ class CalendarController {
       int nowDay = 15; // 默认月中
       // 如果设置了 默认选择的时间 就取默认选择的时间天数，否则为当前时间
       DateModel currentModel = calendarProvider.selectDateModel ??
-          calendarProvider.selectedDateList?.toList()[0] ??
+          calendarProvider.selectedDateList.toList()[0] ??
           DateModel.fromDateTime(DateTime.now());
       if (currentModel != null) {
         nowDay = currentModel.day;
@@ -506,7 +506,7 @@ class CalendarController {
       Curve curve = Curves.ease}) {
     //    如果当前显示的是周视图的话，需要计算出第一个月的index后，调用weekController
     if (calendarProvider.expandStatus?.value == false) {
-      int currentMonth = weekList[weekController.page?.toInt() ?? 0].month;
+      int currentMonth = weekList[weekController?.page?.toInt() ?? 0].month;
       for (int i = calendarProvider.calendarConfiguration?.weekController?.page
                   ?.toInt() ??
               0;
