@@ -170,8 +170,7 @@ class CalendarController {
       int nowDay = 15; // 默认月中
       // 如果设置了 默认选择的时间 就取默认选择的时间天数，否则为当前时间
       DateModel currentModel = calendarProvider.selectDateModel ??
-          calendarProvider.selectedDateList.toList()[0] ??
-          DateModel.fromDateTime(DateTime.now());
+          calendarProvider.selectedDateList.toList()[0];
       if (currentModel != null) {
         nowDay = currentModel.day;
       }

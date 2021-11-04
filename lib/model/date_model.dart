@@ -37,7 +37,7 @@ class DateModel {
   //公历节日
   String get gregorianFestival {
     String result = LunarUtil.gregorianFestival(month, day);
-    if (result?.isNotEmpty ?? false) {
+    if (result.isNotEmpty) {
       return result;
     }
     return LunarUtil.getSpecialFestival(year, month, day);
